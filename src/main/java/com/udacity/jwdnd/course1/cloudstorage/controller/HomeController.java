@@ -22,6 +22,7 @@ public class HomeController {
 //    private UserMapper userMapper;
     private EncryptionService encryptionService;
 
+    //fix redirect to home page after successful--
     public HomeController(UserService userService, FileService fileService, CredentialsService credentialsService, NoteService noteService, EncryptionService encryptionService) {
         this.userService = userService;
         this.fileService = fileService;
