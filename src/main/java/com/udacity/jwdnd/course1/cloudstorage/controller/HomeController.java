@@ -47,8 +47,8 @@ public class HomeController {
         return "home";
     }
 
-    @GetMapping("/result")
-    public String result() {
-        return "result";
-    }
+//    @GetMapping("/result")
+//    public String result() {
+//        return "result";
+//    }
 }
