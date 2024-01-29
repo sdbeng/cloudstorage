@@ -20,10 +20,10 @@ public class NoteController {
     private String successMessage = null;
 
 
-    public NoteController(NoteService noteService, UserService userService, UserMapper userMapper) {
+    public NoteController(NoteService noteService, UserService userService) {
         this.noteService = noteService;
         this.userService = userService;
-        this.userMapper = userMapper;
+//        this.userMapper = userMapper;
     }
 
     @GetMapping("/delete")
@@ -43,15 +43,20 @@ public class NoteController {
     @PostMapping("/notes")
     public String addOrUpdateNote(Authentication authentication, @ModelAttribute Note note){
         User user = userService.getUser(authentication.getName());
+        System.out.printf("user: %s%n", user);
         Integer userId = user.getUserId();
+//        System.out.printf("userId: %s%n", userId);//user is null here
 
         if(note.getNoteId() == null){
+            System.out.println("1.noteId is null, creating new note...");
             note.setUserId(userId);
             noteService.addNote(note);
         }else{
+            System.out.println("2.noteId is NOT null, updating existing note...");
             noteService.updateNote(note);
         }
-        return "redirect:/home?success";
+        System.out.println("3. redirecting to notes page...");
+        return "redirect:/home";//should redirect to home if success
     }
 
 }

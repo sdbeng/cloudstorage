@@ -15,13 +15,14 @@ public class NoteService {
         this.noteMapper = noteMapper;
     }
 
-    @PostConstruct
-    public void postConstruct() {
-        System.out.println("Creating NoteService bean");
-    }
+//    @PostConstruct
+//    public void postConstruct() {
+//        System.out.println("Creating NoteService bean");
+//    }
 
     public List<Note> getNotes(Integer userId) {
-        System.out.println("Getting notes");
+        String checkUserId = userId == null ? "null" : userId.toString();
+        System.out.println("Getting notes, checkUserId: " + checkUserId);
         return noteMapper.getNotes(userId);
     }
 
@@ -29,9 +30,15 @@ public class NoteService {
         return noteMapper.getNoteById(noteId);
     }
 
-    public void addNote(Note note) {
-        System.out.println("Adding note");
-        noteMapper.insertNote(note);
+    public Integer addNote(Note note) {
+        //check if note is null
+        if (note == null) {
+            System.out.println("note is null");
+        } else {
+            System.out.println("note is NOT null- note title:"+note.getNoteTitle());
+        }
+        System.out.println("Adding note...noteService");
+        return noteMapper.insertNote(note);//this was returning null
 //        Note newNote = new Note();
 //        newNote.setUserId(userId);
 //        newNote.setNoteTitle(note.getNoteTitle());
@@ -43,13 +50,13 @@ public class NoteService {
     }
 
     public void deleteNote(Integer noteId) {
-        System.out.println("Deleting note");
+        System.out.println("Deleting note...");
         noteMapper.delete(noteId);
     }
 
-    public void updateNote(Note note) {
-        System.out.println("Updating note");
-        noteMapper.update(note);
+    public Integer updateNote(Note note) {
+        System.out.println("Updating note...");
+        return noteMapper.update(note);
     }
 
 }
