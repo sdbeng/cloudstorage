@@ -27,7 +27,7 @@ public class CredentialsService {
     }
     //addCredentials
     public void addCredentials(Credentials credentials) {
-        System.out.println(credentials);
+        System.out.println("credentials:" +  credentials);
         credentialsMapper.insertCredentials(credentials);
     }
     //editCredentials
