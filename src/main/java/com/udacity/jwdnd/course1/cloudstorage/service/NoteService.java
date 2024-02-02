@@ -55,8 +55,9 @@ public class NoteService {
     }
 
     public Integer updateNote(Note note) {
+        ////even tho note seems to be updated through a success msg, it's not reaching here, title or desc won't change
         System.out.println("^^^note object passed in updateNote ^^^"+ note);
-        System.out.printf("Updating note...%s%n", note.getNoteTitle());//even tho note seems to be updated through a success msg, it's not reaching here, title or desc won't change
+        System.out.printf("Updating note...%s%n", note.getNoteTitle());
         return noteMapper.update(note);
     }
 

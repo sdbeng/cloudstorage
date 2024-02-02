@@ -58,7 +58,6 @@ public class NoteController {
         User user = userService.getUser(authentication.getName());
         System.out.printf("user: %s%n", user);
         Integer userId = user.getUserId();
-//        System.out.printf("userId: %s%n", userId);//user is null here
         System.out.println("LOG +++ addNote +++ - noteId value: " + note.getNoteId());
 
         if(note.getNoteId() == null){
