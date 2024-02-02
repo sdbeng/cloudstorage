@@ -35,9 +35,9 @@ public class NoteService {
         if (note == null) {
             System.out.println("note is null");
         } else {
-            System.out.println("note is NOT null- note title:"+note.getNoteTitle());
+            System.out.println("NOteService:note is NOT null- note title:"+note.getNoteTitle());
         }
-        System.out.println("Adding note...noteService");
+        System.out.println("Adding note...NoteService");
         return noteMapper.insertNote(note);//this was returning null
 //        Note newNote = new Note();
 //        newNote.setUserId(userId);
@@ -55,7 +55,8 @@ public class NoteService {
     }
 
     public Integer updateNote(Note note) {
-        System.out.println("Updating note...");
+        System.out.println("^^^note object passed in updateNote ^^^"+ note);
+        System.out.printf("Updating note...%s%n", note.getNoteTitle());//even tho note seems to be updated through a success msg, it's not reaching here, title or desc won't change
         return noteMapper.update(note);
     }
 
