@@ -22,7 +22,7 @@ public interface FileMapper {
     List<File> getAllFiles(Integer userid);
 
     @Delete("DELETE FROM FILES WHERE fileId = #{fileId}")
-    int deleteFile(Integer fileId);
+    void deleteFile(int fileId);
 
     @Select("SELECT * FROM FILES WHERE userid = #{userid} AND filename = #{filename}")
     File getFile(Integer userid, String filename);

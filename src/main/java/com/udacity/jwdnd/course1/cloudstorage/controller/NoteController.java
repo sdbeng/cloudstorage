@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/home/notes")
+@RequestMapping("/notes")
 public class NoteController {
 
     private UserService userService;
@@ -53,7 +53,7 @@ public class NoteController {
         return "redirect:/result?success";
     }
 
-    @PostMapping("/notes")
+    @PostMapping("/addNote")
     public String addNote(Authentication authentication, @ModelAttribute Note note){
         User user = userService.getUser(authentication.getName());
         System.out.printf("user: %s%n", user);
