@@ -12,13 +12,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/home/notes")
+@RequestMapping("/notes")
 public class NoteController {
 
     private UserService userService;
@@ -30,76 +31,85 @@ public class NoteController {
     private String successMessage = null;
 
     @Autowired
-    public NoteController(NoteService noteService, UserService userService, NoteMapper noteMapper, NoteUpdateService noteUpdateService){
+    public NoteController(NoteService noteService, UserService userService, NoteMapper noteMapper, NoteUpdateService noteUpdateService, UserMapper userMapper){
         this.noteService = noteService;
         this.noteUpdateService = noteUpdateService;
         this.userService = userService;
         this.noteMapper = noteMapper;
         System.out.println("NoteController initialized with NoteService: " + noteService);
-//        this.userMapper = userMapper;
+        this.userMapper = userMapper;
     }
 
-    @GetMapping("/delete")
-    public String deleteFile(@RequestParam("id") Integer noteId) {
-//        if(noteId == null){
-//            errorMessage = "Note not found";
-//
-//            return "redirect:/home";
-//        }
-        noteService.deleteNote(noteId);
-//        successMessage = "Note deleted successfully";
-
-//        redirectAttributes.addFlashAttribute("successMessage", successMessage);
-        return "redirect:/result?success";
-    }
-
-    @PostMapping("/notes")
-    public String addNote(Authentication authentication, @ModelAttribute Note note){
+    @GetMapping()
+    public String getNotesList(Authentication authentication, Model model){
         User user = userService.getUser(authentication.getName());
-        System.out.printf("user: %s%n", user);
         Integer userId = user.getUserId();
-//        System.out.printf("userId: %s%n", userId);//user is null here
-        System.out.println("LOG +++ addNote +++ - noteId value: " + note.getNoteId());
+        System.out.println("userId: " + userId);
+        model.addAttribute("notes", noteService.getAllNotes());
+        return "home";
+    }
 
-        if(note.getNoteId() == null){
-            System.out.println("1.noteId is null, creating new note...");
-            note.setUserId(userId);
-            noteService.addNote(note);
-        }
-//        else{
-//            System.out.println("2.noteId is NOT null, updating existing note...");
-//            noteService.updateNote(note);
+    @PostMapping("/create")
+    public String addNote(Authentication authentication, @ModelAttribute Note note, Model model){
+        User user = userService.getUser(authentication.getName());
+        note.setUserId(userService.getUser(authentication.getName()).getUserId());
+        String errorMessage = null;
+        System.out.printf("###### user: %s%n", user);
+        System.out.printf("userId: %s%n", user.getUserId());
+//        System.out.println("LOG +++ addNote +++ - noteId value: " + note.getNoteId());
+
+//        if(note.getNoteTitle().isEmpty() || note.getNoteDescription().isEmpty()){
+//            errorMessage = "Note title and description cannot be empty.";
 //        }
-        System.out.println("3. redirecting to success message...");
+//        if(!noteService.isNoteAvailable(note.getNoteTitle())) {
+//            errorMessage = "Oops, the note already exists.";
+//        }
 
-        return "redirect:/result?success";//if noteId is null, it will redirect to /result?success
-    }
+//        if (errorMessage == null) {
+//            if (noteService.addNoteService(note) != 1) {
+//                errorMessage = "There was an error creating the node. Please try again.";
+//            }
+//        }
 
-    @PutMapping("/{id}/edit")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> updateNoteEndpoint(@PathVariable int id, @Valid @RequestBody Note note) throws Exception {
-        Note existingNote = noteService.getNote(id);
-        System.out.println("****existingNote: " + existingNote);
-        if (existingNote != null && !existingNote.equals(note)) {
-            System.out.println("^^^^^^^^existingNote is not null and not equal to note");
-            throw new Exception("The requested resource does not exist...");
+        System.out.println("NoteController: noteId: " + note.getNoteId());
+        if(note.getNoteId() == null){
+            try {
+                noteService.addNoteService(note);
+                System.out.println("NoteController: noteId null, note added...");
+//                model.addAttribute("isSuccess", true);
+//                model.addAttribute("successMsg", "Note has been created!");
+            }catch (Exception e){
+                System.out.println("There is an error adding a note: " + e);
+                model.addAttribute("isError", true);
+//                model.addAttribute("errorMsg", "Something wrong when creating a Note.");
+//                errorMessage = "An error occurred during creation of a Note.";
+            }
+        }else{
+            System.out.println("----Note does exist, editing note..."+ note.getNoteTitle());
+            noteService.updateNote(note);
+//            model.addAttribute("isSuccess", true);
+//            model.addAttribute("successMsg", "Note has been updated!");
         }
-        noteService.updateNote(note);
-//        noteUpdateService.updateNote(note);
-        return ResponseEntity.ok().build();
-    }
-//    @PutMapping("/notes")
-//    public String updateNote(@Validated @RequestBody Note note, Authentication authentication){
-//        System.out.println("*** updateNote *** - note object: " + note);
-//        User user = userService.getUser(authentication.getName());
-//        Integer userId = user.getUserId();
-//        System.out.println("userId...editing: " + userId);
-//        note.setUserId(userId);
-//        note.setNoteId(note.getNoteId());
-//        System.out.println("noteId...editing: " + note.getNoteId());
-////        return String.valueOf(noteMapper.update(note));
-//        noteService.updateNote(note);//note title or description is not being updated in note service
+
+        model.addAttribute("notes", noteService.getAllNotes());//returning all notes
 //        return "redirect:/result?success";
-//    }
+        return "redirect:/home";// redir /home/notes
+    }
+
+    @GetMapping("/delete/{id}")
+    public String handleDeleteNote(@PathVariable(value="id") Integer noteId,  Model model) {
+        Note note = noteService.getNoteById(noteId);
+        System.out.println("get note by id: " + note.getNoteId());
+        System.out.println("*********NoteController: deleting noteId: ===" + noteId);
+        noteService.deleteNoteById(noteId);
+//    public String deleteFile(@RequestParam(value="id", required = false) String noteTitle,  Model model) {
+//        System.out.println("*********NoteController: deleting noteId: ===" + noteId);
+//
+//        noteService.deleteNote(noteId);
+//        noteService.deleteNote(noteTitle);
+        model.addAttribute("notes", this.noteService.getAllNotes());
+        //return to notes tab route
+        return "redirect:/home";
+    }
 
 }

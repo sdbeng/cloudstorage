@@ -51,24 +51,39 @@ public class FileController {
 
     }
 
-    @GetMapping("/delete")
-    public String deleteFile(@RequestParam("id") int fileid, Authentication authentication, RedirectAttributes redirectAttributes) {
+//    @GetMapping("/delete")
+//    public String deleteFile(@RequestParam(value="id", required = true) int fileId, Authentication authentication, RedirectAttributes redirectAttributes) {
+//        String username = authentication.getName();
+//        User user = userMapper.getUser(username);
+//        String deleteError = null;
+//        System.out.println("deleteFile ->fileId: " + fileId);
+//        if (fileId > 0) {
+//            fileService.deleteFile(fileId);
+//            return "redirect:/result?success";
+//        }
+//        redirectAttributes.addAttribute("error", "Unable to delete. File not found");
+//        return "redirect:/result?error";
+//    }
+
+    @GetMapping("/handleDelete/{id}")
+    public String handleDelete(@PathVariable(value = "id") Integer fileId, Authentication authentication, RedirectAttributes redirectAttributes) {
         String username = authentication.getName();
         User user = userMapper.getUser(username);
         String deleteError = null;
-
-        if (fileid > 0) {
-            fileService.deleteFile(fileid);
+        System.out.println("HANDLER*****deleteFile ->fileId: " + fileId);
+        if (fileId > 0) {
+            fileService.deleteFile(fileId);
             return "redirect:/result?success";
         }
-
         redirectAttributes.addAttribute("error", "Unable to delete. File not found");
         return "redirect:/result?error";
     }
-
+    //method responds to UI View.
     @GetMapping("/download/{fileId}")
     public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable Integer fileId) {
+        System.out.println("View-> fileId: " + fileId);
         File file = fileService.getFileById(fileId);
+        System.out.println("View-> file: " + file);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(file.getContenttype()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")

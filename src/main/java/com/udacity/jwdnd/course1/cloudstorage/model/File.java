@@ -11,18 +11,18 @@ package com.udacity.jwdnd.course1.cloudstorage.model;
 );
 * */
 public class File {
-    private Integer fileId;
+    private int fileId;
     private String filename;
     private String contenttype;
     private String filesize;
     private Integer userid;
     private byte[] filedata;
 
-    public Integer getFileId() {
+    public int getFileId() {
         return fileId;
     }
 
-    public void setFileId( Integer fileId ) {
+    public void setFileId( int fileId ) {
         this.fileId = fileId;
     }
 

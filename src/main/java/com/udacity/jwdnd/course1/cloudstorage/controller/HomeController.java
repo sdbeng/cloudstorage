@@ -9,10 +9,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
 @Controller
+@RequestMapping("/home")
 public class HomeController {
 
     private UserService userService;
@@ -22,7 +24,6 @@ public class HomeController {
 //    private UserMapper userMapper;
     private EncryptionService encryptionService;
 
-    //fix redirect to home page after successful--
     public HomeController(UserService userService, FileService fileService, CredentialsService credentialsService, NoteService noteService, EncryptionService encryptionService) {
         this.userService = userService;
         this.fileService = fileService;
@@ -31,16 +32,16 @@ public class HomeController {
 //        this.userMapper = userMapper;
         this.encryptionService = encryptionService;
     }
-    @GetMapping("/home")
+    @GetMapping
     public String homePage(Authentication authentication, Model model, File file, Note note, Credentials credentials) {
         User user = userService.getUser(authentication.getName());
         Integer userId = user.getUserId();
 
-        List<Note> noteList = noteService.getNotes(userId);
+        List<Note> noteList = noteService.getAllNotes();
         model.addAttribute("notes", noteList);
         List<File> fileList = fileService.getFiles(userId);
         model.addAttribute("files", fileList);
-        List<Credentials> credentialsList = credentialsService.getCredentials(userId);
+        List<Credentials> credentialsList = credentialsService.getCredentials();
         model.addAttribute("credentials", credentialsList);
         model.addAttribute("encryptionService", encryptionService);
 
