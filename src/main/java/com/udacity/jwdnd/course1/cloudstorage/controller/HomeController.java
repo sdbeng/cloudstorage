@@ -37,11 +37,11 @@ public class HomeController {
         User user = userService.getUser(authentication.getName());
         Integer userId = user.getUserId();
 
-        List<Note> noteList = noteService.getNotes(userId);
+        List<Note> noteList = noteService.getAllNotes();
         model.addAttribute("notes", noteList);
         List<File> fileList = fileService.getFiles(userId);
         model.addAttribute("files", fileList);
-        List<Credentials> credentialsList = credentialsService.getCredentials(userId);
+        List<Credentials> credentialsList = credentialsService.getCredentials();
         model.addAttribute("credentials", credentialsList);
         model.addAttribute("encryptionService", encryptionService);
 

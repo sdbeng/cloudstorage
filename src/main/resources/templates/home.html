@@ -68,10 +68,10 @@
                             + Add a New Note
                         </button>
                         <div th:if="${notes == null || notes.isEmpty()}" class="d-flex justify-content-center mt-5">
-                            You have no notes, try adding it again !
+                            You have no notes.
                         </div>
 
-                        <div th:if="${notes != null && !notes.isEmpty()}" class="table-responsive">
+                        <div class="table-responsive">
                             <table class="table table-striped" id="userTable">
                                 <thead>
                                     <tr>
@@ -81,14 +81,21 @@
                                     </tr>
                                 </thead>
                                 <tbody id="notes-body">
+<!--                                    <tr th:text="${isError} ? 'You have an error adding notes' : ''">-->
+<!--                                        <td th:text="${isError}" ></td>-->
+<!--                                        <td th:text="${isSuccess} ? 'note added successfully!': 'No success...' " ></td>-->
+<!--                                    </tr>-->
+<!--                                <form th:action="@{/home}" th:object="${note}" method="POST">-->
                                     <tr th:each="note : ${notes}">
                                         <td>
                                             <button id="edit-note-button" th:onclick="showNoteModal([[${note.noteId}]],[[${note.noteTitle}]],[[${note.noteDescription}]])" type="button" class="btn btn-success">Edit</button>
-                                            <a id="delete-note-button" th:href="@{/home/notes/delete(id=${note.noteId})}" class="btn btn-danger">Delete</a>
+                                            <a id="delete-note-button" th:href="@{/notes/delete/{id}(id=${note.noteId})}" class="btn btn-danger">Delete</a>
+<!--                                            <a id="delete-note-button" th:href="@{/note/delete{id}(id=${note.noteId})}" class="btn btn-danger">Delete</a>-->
                                         </td>
                                         <th id="table-note-title" th:text="${note.noteTitle}" scope="row"></th>
                                         <td id="table-note-description"  th:text="${note.noteDescription}"></td>
                                     </tr>
+<!--                                    </form>-->
                                 </tbody>
                             </table>
                         </div>
@@ -103,7 +110,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" th:action="@{/notes/addNote}" th:object ="${note}" method="POST">
+                                        <form action="#" th:action="@{/notes/create}" th:object ="${note}" method="POST">
                                             <input type="hidden" th:field="*{noteId}" th:value="*{noteId}" name="noteId" id="note-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Title</label>
