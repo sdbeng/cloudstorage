@@ -29,7 +29,7 @@ public class CredentialsController {
         this.encryptionService = encryptionService;
     }
 
-    @PostMapping()
+    @PostMapping("/addUpdateCredentials")
     public String addUpdateCredentials(Authentication authentication, Credentials credentials) {
         String username = (String) authentication.getPrincipal();
         User user = userMapper.getUser(username);
