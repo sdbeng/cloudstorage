@@ -29,25 +29,26 @@ public class FileController {
         this.userMapper = userMapper;
     }
 
-    @PostMapping("/files")
+    @PostMapping("/upload")
     public String handleFileUpload(@RequestParam("fileUpload") MultipartFile fileUpload, Model model, Authentication authentication) throws IOException {
         String username = authentication.getName();
         User user = userMapper.getUser(username);
         Integer userid = user.getUserId();
         String filename = fileUpload.getOriginalFilename();
 
-        if (!fileService.isFileNameAvailable(filename, userid)) {
-            model.addAttribute("error", "File already exists");
-            return "redirect:/result?error";
-        }
+//        if (!fileService.isFileNameAvailable(filename, userid)) {
+//            model.addAttribute("error", "File already exists");
+//            return "redirect:/result?error";
+//        }
 
         if (fileUpload.getSize() > 0) {
+            System.out.println("====fileUpload.getSize() > 0");
             fileService.addFile(fileUpload, userid);
             return "redirect:/result?success";
+        }else{
+            model.addAttribute("error", "Unable to upload file");
+            return "redirect:/result?error";
         }
-
-        model.addAttribute("error", "Unable to upload file");
-        return "redirect:/result?error";
 
     }
 
@@ -74,9 +75,10 @@ public class FileController {
         if (fileId > 0) {
             fileService.deleteFile(fileId);
             return "redirect:/result?success";
+        }else{
+            redirectAttributes.addAttribute("error", "Unable to delete. File not found");
+            return "redirect:/result?error";
         }
-        redirectAttributes.addAttribute("error", "Unable to delete. File not found");
-        return "redirect:/result?error";
     }
     //method responds to UI View.
     @GetMapping("/download/{fileId}")
