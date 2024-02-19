@@ -1,7 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
-import com.udacity.jwdnd.course1.cloudstorage.model.Credentials;
+import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.service.CredentialsService;
 import com.udacity.jwdnd.course1.cloudstorage.service.EncryptionService;
@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
-@RequestMapping("/home/credentials")
+@RequestMapping("/credentials")
 @Controller
 public class CredentialsController {
     private CredentialsService credentialsService;
@@ -28,8 +29,8 @@ public class CredentialsController {
         this.encryptionService = encryptionService;
     }
 
-    @PostMapping("/create")
-    public String addUpdateCredentials(Authentication authentication, Credentials credentials, Model model) {
+    @PostMapping("/add")
+    public String addUpdateCredentials(Authentication authentication, Credential credential, Model model) {
         String username = (String) authentication.getPrincipal();
         User user = userMapper.getUser(username);
         int userId = user.getUserId();
@@ -38,38 +39,40 @@ public class CredentialsController {
         byte[] key = new byte[16];
         random.nextBytes(key);
         String encodedKey = Base64.getEncoder().encodeToString(key);
-        String encryptedPassword = encryptionService.encryptValue(credentials.getPassword(), encodedKey);
-        credentials.setKey(encodedKey);
-        credentials.setPassword(encryptedPassword);
+        System.out.println("encodedKey: " + encodedKey);
+        Optional<Credential> credentialsOpt = Optional.ofNullable(credential);
 
-        if(credentials.getCredentialId() == null) {
+        if(credentialsOpt.isPresent()) {
+          credential.getPassword();
+            String encryptedPassword = encryptionService.encryptValue(credential.getPassword(), encodedKey);
+            credential.setKey(encodedKey);
+            credential.setPassword(encryptedPassword);
+        }
+        if(credential.getCredentialId() == null) {
             System.out.println("Credential id not found, adding credentials...");
-            credentials.setUserid(userId);
-            credentialsService.addCredentials(credentials);
+            credential.setUserid(userId);
+            credentialsService.addCredentials(credential);
             successMessage = "Credentials added successfully!";
         } else {
-            credentialsService.editCredentials(credentials);
+            credentialsService.editCredentials(credential);
             successMessage = "Credentials updated successfully!";
         }
-
-
-        List<Credentials> credentialsList = credentialsService.getCredentials();
+        List<Credential> credentialsList = credentialsService.getCredentials();
         System.out.println("===credentialsList=== " + credentialsList);
-//        model.addAttribute("credentials", credentialsList);
+        model.addAttribute("credentials", credentialsList);
         return "redirect:/home?success";
     }
 
-    @ModelAttribute("credentials")
-    public List<Credentials> getCredentials(){
-        List<Credentials> newCredentials = credentialsService.getCredentials();
-        for(Credentials c : credentialsService.getCredentials()){
-            c.setDecryptedPassword(encryptionService.decryptValue(c.getPassword(), c.getKey()));
-        }
-        System.out.println("===new credentials=== " + newCredentials);
-        return newCredentials;
-    }
+//    @ModelAttribute("credentials")
+//    public List<Credential> getCredentials(){
+//
+//        for(Credential c : credentialsService.getCredentials()){
+//            c.setDecryptedPassword(encryptionService.decryptValue(c.getPassword(), c.getKey()));
+//        }
+//
+//    }
 
-    @GetMapping("/delete") //passing the @RequestParam("credentialId") to indicate that the credentialId is passed as a parameter
+    @GetMapping("/delete") //todo:passing the @RequestParam("credentialId") to indicate that the credentialId is passed as a parameter
     public String deleteCredentials(@RequestParam("credentialId") int credentialId) {
         if(credentialId > 0){
             credentialsService.deleteCredentials(credentialId);

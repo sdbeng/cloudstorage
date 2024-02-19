@@ -1,7 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.service;
 
 import com.udacity.jwdnd.course1.cloudstorage.mapper.CredentialsMapper;
-import com.udacity.jwdnd.course1.cloudstorage.model.Credentials;
+import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,29 +18,29 @@ public class CredentialsService {
     }
 
     //getCredentials
-    public List<Credentials> getCredentials() {
+    public List<Credential> getCredentials() {
         return credentialsMapper.getCredentials();
     }
     //get one credential
-    public Credentials getCredentialById(int credentialId) {
+    public Credential getCredentialById(int credentialId) {
         return credentialsMapper.getCredentialById(credentialId);
     }
     //addCredentials
-    public void addCredentials(Credentials credentials) {
-        System.out.println("LOG-Credentials service credentials===" +  credentials);
+    public void addCredentials(Credential credential) {
+        System.out.println("LOG-Credentials service credentials===" + credential);
         //todo: decrypt password before returning to the client
-        String encryptedPassword = credentials.getPassword();
-        credentials.setPassword(encryptedPassword);
-        credentialsMapper.insertCredentials(credentials);
+        String encryptedPassword = credential.getPassword();
+        credential.setPassword(encryptedPassword);
+        credentialsMapper.insertCredentials(credential);
     }
     //editCredentials
-    public void editCredentials(Credentials credentials) {
-        Credentials storedNewCredentials = credentialsMapper.getCredentialById(credentials.getCredentialId());
+    public void editCredentials(Credential credential) {
+        Credential storedNewCredentials = credentialsMapper.getCredentialById(credential.getCredentialId());
 
-        credentials.setKey(storedNewCredentials.getKey());
-        String encryptedPassword = encryptionService.encryptValue(credentials.getPassword(), storedNewCredentials.getKey());
-        credentials.setPassword(encryptedPassword);
-        credentialsMapper.updateCredentials(credentials);
+        credential.setKey(storedNewCredentials.getKey());
+        String encryptedPassword = encryptionService.encryptValue(credential.getPassword(), storedNewCredentials.getKey());
+        credential.setPassword(encryptedPassword);
+        credentialsMapper.updateCredentials(credential);
     }
 
     //deleteCredentials
