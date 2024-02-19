@@ -27,7 +27,10 @@ public class CredentialsService {
     }
     //addCredentials
     public void addCredentials(Credentials credentials) {
-        System.out.println("credentials:" +  credentials);
+        System.out.println("LOG-Credentials service credentials===" +  credentials);
+        //todo: decrypt password before returning to the client
+        String encryptedPassword = credentials.getPassword();
+        credentials.setPassword(encryptedPassword);
         credentialsMapper.insertCredentials(credentials);
     }
     //editCredentials

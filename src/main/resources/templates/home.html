@@ -142,8 +142,8 @@
                                         <th style="width: 25%" scope="col">Password</th>
                                     </tr>
                                 </thead>
-                                <tbody th:each="cred : ${credentials}">
-                                <tr>
+                                <tbody>
+                                <tr th:each="cred : ${credentials}">
                                     <td>
                                         <button
                                                 type="button"
@@ -159,13 +159,15 @@
                                         </a>
                                     </td>
                                     <th id="table-cred-url" th:text="${cred.url}" scope="row">Example Credential URL</th>
-                                    <td th:text="${cred.username}">Example Credential Username</td>
-                                    <td id="table-cred-password" th:text="${cred.password}">Example Credential Password</td>
+                                    <td id="table-cred-username" th:text="${cred.username}">Example Credential Username</td>
+<!--                                    <td id="table-cred-key" th:text="${cred.key}">Example Credential key</td>-->
+                                    <td id="table-cred-password" th:text="${cred.decryptedPassword}">decrypted Password</td>
+<!--                                    <td id="table-cred-password" th:text="${cred.password}">Example Credential Password</td>-->
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
-
+                        <!--Credentials-->
                         <div class="modal fade" id="credentialModal" tabindex="-1" role="dialog" aria-labelledby="credentialModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -176,7 +178,9 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" th:action="@{/home/credentials}" method="POST">
+                                        <form action="#" th:action="@{/home/credentials/create}" method="POST">
+<!--                                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
+
                                             <input type="hidden" name="credentialId" id="credential-id">
                                             <div class="form-group">
                                                 <label for="credential-url" class="col-form-label">URL</label>

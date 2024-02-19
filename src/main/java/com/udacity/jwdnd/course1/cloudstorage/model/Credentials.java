@@ -55,4 +55,10 @@ public class Credentials {
     public void setUserid( Integer userid ) {
         this.userid = userid;
     }
+
+    public void setDecryptedPassword(String passw) {
+        this.password = passw;
+        System.out.println("LOG-Credentials service decrypted password===" +  this.password);
+
+    }
 }
