@@ -7,9 +7,8 @@ import java.util.List;
 
 @Mapper
 public interface CredentialsMapper {
-    @Select("SELECT * FROM CREDENTIALS")
-//    @Select("SELECT * FROM CREDENTIALS WHERE userid = #{userid}")
-    List<Credential> getCredentials();
+    @Select("SELECT * FROM CREDENTIALS WHERE userid = #{userid}")
+    List<Credential> getCredentials(Integer userId);
 
     @Select("SELECT * FROM CREDENTIALS WHERE credentialid = #{credentialId}")//it's credentialid=#{} as in the schema
     Credential getCredentialById(Integer credentialId);
@@ -19,7 +18,7 @@ public interface CredentialsMapper {
 
     @Insert("INSERT INTO CREDENTIALS (url, username, key, password, userid) VALUES(#{url}, #{username}, #{key}, #{password}, #{userid})")
     @Options(useGeneratedKeys = true, keyProperty = "credentialId")
-    void insertCredentials(Credential credential);
+    int insertCredentials(Credential credential);
 
     @Update("UPDATE CREDENTIALS SET url = #{url}, username = #{username}, key = #{key}, password = #{password} WHERE credentialId = #{credentialId}")
     int updateCredentials(Credential credential);
