@@ -59,7 +59,7 @@ public class CredentialsController {
         if(credentialsService.editCredentials(credentialForm) == 1){
             model.addAttribute("success", true);
             model.addAttribute("successMessage", "Credentials updated successfully!");
-            return "redirect:/result?success";
+            return "redirect:/home#nav-credential";
 
         }else{
             model.addAttribute("success", false);
@@ -72,21 +72,25 @@ public class CredentialsController {
 //        return "redirect:/result?success";
     }
 
-    @GetMapping("/delete")
-    public String deleteCredentials(@RequestParam("credentialId") int credentialId, Model model) {
-        System.out.println("CTRL>>>delete crdentialId===" + credentialId);
-        if(credentialsService.deleteCredentials(credentialId) == 1){
+    @GetMapping("/delete/{id}")
+    public String deleteCredentials(@PathVariable("id") int credentialId, Model model) {
+        System.out.println("credentialId PARAM===" + credentialId);
+        //find credentialId first then will pass it to deleteCredentials()
+        Credential credential = credentialsService.getCredential(credentialId);
+        if(credentialsService.getCredentials(credentialId) != null){
             credentialsService.deleteCredentials(credentialId);
             model.addAttribute("success", true);
             model.addAttribute("successMessage", "Credentials deleted successfully!");
-//            return "redirect:/home?success";
+            //display the success message by hitting the /result endpoint
+//            return "redirect:/result?success";
+
         } else {
             model.addAttribute("success", false);
             model.addAttribute("errorMessage", "Error deleting credentials!");
             System.out.println("Error deleting credentials!");
-//            return "redirect:/result?error";
+            return "redirect:/result?error";
         }
-        return "result";
+        return "redirect:/home#nav-credential";
     }
 
 }
