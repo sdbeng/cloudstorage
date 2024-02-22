@@ -93,7 +93,8 @@ public class NoteController {
 
         model.addAttribute("notes", noteService.getAllNotes());//returning all notes
 //        return "redirect:/result?success";
-        return "redirect:/home";// redir /home/notes
+        //display success message
+        return "redirect:/home";
     }
 
     @GetMapping("/delete/{id}")
