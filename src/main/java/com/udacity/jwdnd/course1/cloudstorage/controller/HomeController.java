@@ -1,9 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
-import com.udacity.jwdnd.course1.cloudstorage.model.Credentials;
-import com.udacity.jwdnd.course1.cloudstorage.model.File;
-import com.udacity.jwdnd.course1.cloudstorage.model.Note;
-import com.udacity.jwdnd.course1.cloudstorage.model.User;
+import com.udacity.jwdnd.course1.cloudstorage.model.*;
 import com.udacity.jwdnd.course1.cloudstorage.service.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -33,23 +30,26 @@ public class HomeController {
         this.encryptionService = encryptionService;
     }
     @GetMapping
-    public String homePage(Authentication authentication, Model model, File file, Note note, Credentials credentials) {
+    public String homePage(Authentication authentication, Model model, File file, Note note, CredentialForm credentialForm){
         User user = userService.getUser(authentication.getName());
-        Integer userId = user.getUserId();
+//        Integer userId = user.getUserId();
 
         List<Note> noteList = noteService.getAllNotes();
         model.addAttribute("notes", noteList);
-        List<File> fileList = fileService.getFiles(userId);
+        List<File> fileList = fileService.getFiles(user.getUserId());
         model.addAttribute("files", fileList);
-        List<Credentials> credentialsList = credentialsService.getCredentials();
-        model.addAttribute("credentials", credentialsList);
+        model.addAttribute("credentials", credentialsService.getCredentials(user.getUserId()));
+//        List<Credential> credentialsList = credentialsService.getCredentials();
+//        model.addAttribute("credentials", credentialsList);
         model.addAttribute("encryptionService", encryptionService);
 
         return "home";
     }
 
-//    @GetMapping("/result")
-//    public String result() {
+    @GetMapping("/result")
+    public String result() {
+        System.out.println("result mapped path...");
+        return "redirect:/home#nav-credential";
 //        return "result";
-//    }
+    }
 }

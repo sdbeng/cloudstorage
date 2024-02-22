@@ -1,10 +1,12 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
-import com.udacity.jwdnd.course1.cloudstorage.model.Credentials;
+import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
+import com.udacity.jwdnd.course1.cloudstorage.model.CredentialForm;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.service.CredentialsService;
 import com.udacity.jwdnd.course1.cloudstorage.service.EncryptionService;
+import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,70 +15,82 @@ import org.springframework.web.bind.annotation.*;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
-@RequestMapping("/home/credentials")
 @Controller
+@RequestMapping("/credentials")
 public class CredentialsController {
+    private UserService userService;
     private CredentialsService credentialsService;
     private UserMapper userMapper;
     private EncryptionService encryptionService;
         String successMessage = null;
 
-    public CredentialsController(CredentialsService credentialsService, UserMapper userMapper, EncryptionService encryptionService){
+    public CredentialsController(CredentialsService credentialsService, UserMapper userMapper, UserService userService, EncryptionService encryptionService){
+        this.userService = userService;
         this.credentialsService = credentialsService;
         this.userMapper = userMapper;
         this.encryptionService = encryptionService;
     }
 
-    @PostMapping("/create")
-    public String addUpdateCredentials(Authentication authentication, Credentials credentials, Model model) {
-        String username = (String) authentication.getPrincipal();
-        User user = userMapper.getUser(username);
-        int userId = user.getUserId();
-
-        SecureRandom random = new SecureRandom();
-        byte[] key = new byte[16];
-        random.nextBytes(key);
-        String encodedKey = Base64.getEncoder().encodeToString(key);
-        String encryptedPassword = encryptionService.encryptValue(credentials.getPassword(), encodedKey);
-        credentials.setKey(encodedKey);
-        credentials.setPassword(encryptedPassword);
-
-        if(credentials.getCredentialId() == null) {
-            System.out.println("Credential id not found, adding credentials...");
-            credentials.setUserid(userId);
-            credentialsService.addCredentials(credentials);
-            successMessage = "Credentials added successfully!";
-        } else {
-            credentialsService.editCredentials(credentials);
-            successMessage = "Credentials updated successfully!";
+    @PostMapping("/add")
+    public String addUpdateCredentials(Authentication authentication, CredentialForm credentialForm, Model model) {
+        User user = null;
+        try {
+            user = userService.getUser(authentication.getName());
+            System.out.println("user===" + user);
+        } catch (Exception e) {
+            System.out.println("Error getting user: " + e.getMessage());
+            throw new RuntimeException(e);
         }
+        if(credentialForm.getCredentialId() == null) {
+        if(credentialsService.addCredentials(user, credentialForm) == 1){
+            model.addAttribute("success", true);
+            model.addAttribute("successMessage", "Credentials added successfully!");
+            return "redirect:/home#nav-credential";
+//            return "redirect:/result?success";
 
+        }else{
+            model.addAttribute("success", false);
+            model.addAttribute("errorMessage", "Error adding credentials!");
+            System.out.println("Error adding credentials!");
+        }
+    }else {
+        if(credentialsService.editCredentials(credentialForm) == 1){
+            model.addAttribute("success", true);
+            model.addAttribute("successMessage", "Credentials updated successfully!");
+            return "redirect:/home#nav-credential";
 
-        List<Credentials> credentialsList = credentialsService.getCredentials();
-        System.out.println("===credentialsList=== " + credentialsList);
-//        model.addAttribute("credentials", credentialsList);
-        return "redirect:/home?success";
+        }else{
+            model.addAttribute("success", false);
+            model.addAttribute("errorMessage", "Error updating credentials!");
+            System.out.println("Error updating credentials!");
+        }
     }
 
-    @ModelAttribute("credentials")
-    public List<Credentials> getCredentials(){
-        List<Credentials> newCredentials = credentialsService.getCredentials();
-        for(Credentials c : credentialsService.getCredentials()){
-            c.setDecryptedPassword(encryptionService.decryptValue(c.getPassword(), c.getKey()));
-        }
-        System.out.println("===new credentials=== " + newCredentials);
-        return newCredentials;
+        return "home";
+//        return "redirect:/result?success";
     }
 
-    @GetMapping("/delete") //passing the @RequestParam("credentialId") to indicate that the credentialId is passed as a parameter
-    public String deleteCredentials(@RequestParam("credentialId") int credentialId) {
-        if(credentialId > 0){
+    @GetMapping("/delete/{id}")
+    public String deleteCredentials(@PathVariable("id") int credentialId, Model model) {
+        System.out.println("credentialId PARAM===" + credentialId);
+        //find credentialId first then will pass it to deleteCredentials()
+        Credential credential = credentialsService.getCredential(credentialId);
+        if(credentialsService.getCredentials(credentialId) != null){
             credentialsService.deleteCredentials(credentialId);
-            return "redirect:/home?success";
+            model.addAttribute("success", true);
+            model.addAttribute("successMessage", "Credentials deleted successfully!");
+            //display the success message by hitting the /result endpoint
+//            return "redirect:/result?success";
+
         } else {
+            model.addAttribute("success", false);
+            model.addAttribute("errorMessage", "Error deleting credentials!");
+            System.out.println("Error deleting credentials!");
             return "redirect:/result?error";
         }
+        return "redirect:/home#nav-credential";
     }
 
 }
