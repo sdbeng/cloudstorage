@@ -37,12 +37,16 @@ public class FileController {
         String filename = fileUpload.getOriginalFilename();
 
         if (!fileService.isFileNameAvailable(filename, userid)) {
-            model.addAttribute("error", "File already exists");
-            return "redirect:/home#nav-credential";
+            System.out.println("is filename available, it already exists....");
+            model.addAttribute("error", true);
+            model.addAttribute("errorMsg", "File already exists");
+            //clear the uploaded file
+            fileUpload.getInputStream().close();
+            return "redirect:/home/result?error=true";
         }
 
         if (fileUpload.getSize() > 0) {
-            System.out.println("====fileUpload.getSize() > 0");
+//            System.out.println("====fileUpload.getSize() > 0");
             fileService.addFile(fileUpload, userid);
             return "redirect:/home#nav-credential";
         }else{
@@ -57,9 +61,9 @@ public class FileController {
         String username = authentication.getName();
         User user = userMapper.getUser(username);
         String deleteError = null;
-        System.out.println("HANDLER*****deleteFile ->fileId: " + fileId);
         if (fileId > 0) {
             fileService.deleteFile(fileId);
+            System.out.println("HANDLER*****deleteFile ->fileId: " + fileId);
             return "redirect:/home#nav-credential";
         }else{
             redirectAttributes.addAttribute("error", "Unable to delete. File not found");
