@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap.min.css}">
+
+    <title>Note success</title>
+</head>
+<body class="p-3 mb-2 bg-light">
+<div class="container justify-content-center w-50 p-3" style="margin-top: 5em;">
+    <h2>Success! Changes successfully saved.</h2>
+    <h3 th:if="${success}" class="display-5 alert alert-success" id="success" >Success! Changes successfully saved.</h3>
+    <h3 th:if="${update}" >Note updated success!</h3>
+    <a href="javascript:history.back();" class="btn btn-outline-secondary w-16">Back</a>
+</div>
+
+</body>
+</html>

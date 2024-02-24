@@ -9,9 +9,10 @@
         <title>Login</title>
     </head>
     <body class="p-3 mb-2 bg-light text-black">
-        <div class="container justify-content-center w-25 p-3" style="background-color: #eeeeee; margin-top: 5em;">
-            <h1 class="display-5">Login</h1>
+        <div class="container justify-content-center w-35 p-3" style="background-color: #ffffff; margin-top: 5em;">
+            <h3>Welcome to Cloud Storage! We are more than just a company</h3>
             <form action="#" th:action="@{/login}" method="POST">
+            <p class="display-5">Please log in to your account</p>
                 <div id="error-msg" th:if="${param.error}" class="alert alert-danger">
                     Invalid username or password
                 </div>
@@ -26,11 +27,11 @@
                     <label for="inputPassword">Password</label>
                     <input type="password" class="form-control" name="password" id="inputPassword" placeholder="Enter Password" maxlength="20" required>
                 </div>
-                <button type="submit" class="btn btn-primary" id="login-button">Login</button>
+                <button type="submit" style="background-color: #ed6f2e;border-radius: 5px;color: white;border-style: none;" id="login-button">Login</button>
             </form>
 
             <div class="form-group" style="margin-top: 0.5em;">
-                <label><a id="signup-link" th:href="@{/signup}">Click here to sign up</a></label>
+                <label><a style="color:#9689a4" id="signup-link" th:href="@{/signup}">Not a user? Sign up</a></label>
             </div>
         </div>
     </body>

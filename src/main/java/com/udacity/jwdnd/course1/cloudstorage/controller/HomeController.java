@@ -26,21 +26,17 @@ public class HomeController {
         this.fileService = fileService;
         this.noteService = noteService;
         this.credentialsService = credentialsService;
-//        this.userMapper = userMapper;
         this.encryptionService = encryptionService;
     }
     @GetMapping
     public String homePage(Authentication authentication, Model model, File file, Note note, CredentialForm credentialForm){
         User user = userService.getUser(authentication.getName());
-//        Integer userId = user.getUserId();
 
         List<Note> noteList = noteService.getAllNotes();
         model.addAttribute("notes", noteList);
         List<File> fileList = fileService.getFiles(user.getUserId());
         model.addAttribute("files", fileList);
         model.addAttribute("credentials", credentialsService.getCredentials(user.getUserId()));
-//        List<Credential> credentialsList = credentialsService.getCredentials();
-//        model.addAttribute("credentials", credentialsList);
         model.addAttribute("encryptionService", encryptionService);
 
         return "home";
@@ -49,7 +45,13 @@ public class HomeController {
     @GetMapping("/result")
     public String result() {
         System.out.println("result mapped path...");
-        return "redirect:/home#nav-credential";
-//        return "result";
+//        return "redirect:/home#nav-credential";
+        return "result";
+    }
+
+    @GetMapping("/note-success")
+    public String noteSuccess() {
+        System.out.println("note-success mapped path...");
+        return "note-success";
     }
 }

@@ -17,7 +17,6 @@ public class NoteService {
     }
 
     public List<Note> getAllNotes() {
-        System.out.println("Getting all notes...");
         return noteMapper.getAllNotes();
     }
 
@@ -34,23 +33,10 @@ public class NoteService {
     }
 
     public Integer addNoteService(Note note) {
-        logger.info("addNoteService..."+ note);
-        //check if note is null
-//        if (note == null) {
-//            logger.info("xxxxxx note is null xxxxxx");
-//
-//        } else {
-//            logger.info("NOteService:note is NOT null- note title:"+note.getNoteTitle());
-//        }
-//        logger.info("Creating new note...");
 
         Note newNote = new Note();
-//        newNote.setUserId(userId);
         newNote.setNoteTitle(note.getNoteTitle());
         newNote.setNoteDescription(note.getNoteDescription());
-        logger.info("---new note--->" + newNote.getNoteTitle());
-//        int result = noteMapper.insertNote(newNote);
-//        logger.info("NoteService: new note INSERted, result: "+ result);
         return noteMapper.insertNote(newNote);
     }
 
@@ -58,18 +44,12 @@ public class NoteService {
         System.out.println("Deleting note..." + noteId);
         return noteMapper.delete(noteId);
     }
-//    public int deleteNote(String noteTitle) {
-//        System.out.println("Deleting note..." + noteTitle);
-//        return noteMapper.delete(noteTitle);
-//    }
 
     public int updateNote(Note note) {
-        System.out.println("^^^note object passed in updateNote ^^^"+ note);
         Note newNote = new Note();
         newNote.setUserId(note.getUserId());
         newNote.setNoteId(note.getNoteId());
         newNote.setNoteTitle(note.getNoteTitle());
-        System.out.printf("Updating note...%s%n", note.getNoteTitle());
         newNote.setNoteDescription(note.getNoteDescription());
         return noteMapper.update(note);
     }

@@ -8,22 +8,19 @@
 
         <title>Result</title>
     </head>
-    <body class="p-3 mb-2 bg-light text-black">
+    <body class="p-3 mb-2 bg-light">
         <div class="container justify-content-center w-50 p-3" style="margin-top: 5em;">
-            <div th:if="${success}" class="alert alert-success fill-parent">
-                <h1 class="display-5" id="success">Success</h1>
-                <span th:text="${successMessage}">zzYour changes were successfully saved.</span>
-                <a href="/home#nav-credential">Back to credentials</a>
+            <div th:if="${success}">
+            <h3 class="display-5 alert alert-success" id="success" >Success! Changes successfully saved.</h3>
+            <a href="javascript:history.back();" class="btn btn-outline-secondary w-16">Back</a>
             </div>
-<!--            <div th:if="${fail}" class="alert alert-danger fill-parent">-->
-<!--                <h1 class="display-5">Error</h1>-->
-<!--                <span th:text="${errorMessage}">Your changes were not saved. Click <a th:href="@{/home}">here</a> to continue.</span>-->
-<!--            </div>-->
+
             <div th:unless="${success}" class="alert alert-danger fill-parent">
-                <h1 class="display-5">Error</h1>
-                <span th:text="${error}">Example Error Message</span>
-                <a href="/home#nav-credential">Back to credentials</a>
+                <h1 class="display-5 alert alert-danger" id="error">Error. Something went wrong.</h1>
+                <span th:text="${errorMsg}">Error Message</span>
+                <a href="javascript:history.back();" class="btn btn-outline-secondary w-16">Back</a>
             </div>
         </div>
+
     </body>
 </html>

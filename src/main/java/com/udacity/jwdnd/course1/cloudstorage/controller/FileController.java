@@ -36,51 +36,41 @@ public class FileController {
         Integer userid = user.getUserId();
         String filename = fileUpload.getOriginalFilename();
 
-//        if (!fileService.isFileNameAvailable(filename, userid)) {
-//            model.addAttribute("error", "File already exists");
-//            return "redirect:/result?error";
-//        }
+        if (!fileService.isFileNameAvailable(filename, userid)) {
+            System.out.println("is filename available, it already exists....");
+            model.addAttribute("error", true);
+            model.addAttribute("errorMsg", "File already exists");
+            //clear the uploaded file
+            fileUpload.getInputStream().close();
+            return "redirect:/home/result?error=true";
+        }
 
         if (fileUpload.getSize() > 0) {
-            System.out.println("====fileUpload.getSize() > 0");
+//            System.out.println("====fileUpload.getSize() > 0");
             fileService.addFile(fileUpload, userid);
-            return "redirect:/result?success";
+            return "redirect:/home#nav-credential";
         }else{
             model.addAttribute("error", "Unable to upload file");
-            return "redirect:/result?error";
+            return "redirect:/home#nav-credential/error";
         }
 
     }
-
-//    @GetMapping("/delete")
-//    public String deleteFile(@RequestParam(value="id", required = true) int fileId, Authentication authentication, RedirectAttributes redirectAttributes) {
-//        String username = authentication.getName();
-//        User user = userMapper.getUser(username);
-//        String deleteError = null;
-//        System.out.println("deleteFile ->fileId: " + fileId);
-//        if (fileId > 0) {
-//            fileService.deleteFile(fileId);
-//            return "redirect:/result?success";
-//        }
-//        redirectAttributes.addAttribute("error", "Unable to delete. File not found");
-//        return "redirect:/result?error";
-//    }
 
     @GetMapping("/handleDelete/{id}")
     public String handleDelete(@PathVariable(value = "id") Integer fileId, Authentication authentication, RedirectAttributes redirectAttributes) {
         String username = authentication.getName();
         User user = userMapper.getUser(username);
         String deleteError = null;
-        System.out.println("HANDLER*****deleteFile ->fileId: " + fileId);
         if (fileId > 0) {
             fileService.deleteFile(fileId);
-            return "redirect:/result?success";
+            System.out.println("HANDLER*****deleteFile ->fileId: " + fileId);
+            return "redirect:/home#nav-credential";
         }else{
             redirectAttributes.addAttribute("error", "Unable to delete. File not found");
-            return "redirect:/result?error";
+            return "redirect:/home#nav-credential/error";
         }
     }
-    //method responds to UI View.
+
     @GetMapping("/download/{fileId}")
     public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable Integer fileId) {
         System.out.println("View-> fileId: " + fileId);
