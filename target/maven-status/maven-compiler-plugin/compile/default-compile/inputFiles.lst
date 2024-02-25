@@ -5,6 +5,7 @@
 /Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/service/AuthenticationService.java
 /Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/model/User.java
 /Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/model/Note.java
+/Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/model/CredentialForm.java
 /Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/service/FileService.java
 /Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/mapper/FileMapper.java
 /Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/controller/NoteController.java
@@ -14,12 +15,11 @@
 /Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/service/NoteService.java
 /Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/controller/FileController.java
 /Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/model/File.java
-/Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/model/Credentials.java
+/Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/model/Credential.java
 /Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/service/UserService.java
 /Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/controller/HomeController.java
 /Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/CloudStorageApplication.java
 /Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/mapper/NoteMapper.java
 /Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/controller/SignupController.java
-/Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/controller/ResultController.java
 /Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/service/EncryptionService.java
 /Users/sergb/cloudstorage/src/main/java/com/udacity/jwdnd/course1/cloudstorage/controller/LoginController.java
