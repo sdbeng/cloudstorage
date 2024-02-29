@@ -29,14 +29,15 @@ public class HomeController {
         this.encryptionService = encryptionService;
     }
     @GetMapping
-    public String homePage(Authentication authentication, Model model, File file, Note note, CredentialForm credentialForm){
+    public String homePage(Authentication authentication, Model model, Note note, File file, CredentialForm credentialForm){
         User user = userService.getUser(authentication.getName());
 
-        List<Note> noteList = noteService.getNotesForUser(user.getUserId());//listing not global notes
-        model.addAttribute("notes", noteList);
-        List<File> fileList = fileService.getFiles(user.getUserId());
-        model.addAttribute("files", fileList);
-        model.addAttribute("credentials", credentialsService.getCredentials(user.getUserId()));
+        List<Note> notes = noteService.getNotesForUser(user.getUserId());
+        List<File> files = fileService.getFilesForUSer(user.getUserId());
+        List<Credential> credentials = credentialsService.getCredentialsForUser(user.getUserId());
+        model.addAttribute("credentials", credentials);
+        model.addAttribute("files", files);
+        model.addAttribute("notes", notes);
         model.addAttribute("encryptionService", encryptionService);
 
         return "home";

@@ -22,10 +22,6 @@ public class NoteService {
         return noteMapper.getAllNotes();
     }
 
-//    public List<Note> getUserNotes(Integer userId) {
-//        return noteMapper.getUserNotes(userId);
-//    }
-
     public Note getNote(Integer noteId) {
         return noteMapper.getNoteById(noteId);
     }

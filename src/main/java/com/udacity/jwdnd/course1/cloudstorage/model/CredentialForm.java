@@ -5,6 +5,7 @@ public class CredentialForm {
     private String url;
     private String username;
     private String password;
+    private Integer userId;
 
     public Integer getCredentialId() {
         return credentialId;
@@ -36,5 +37,10 @@ public class CredentialForm {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setUserId(Integer userId) {
+        System.out.println("Creds-->setUserId called, userId param: " + userId);
+        this.userId = userId;
     }
 }

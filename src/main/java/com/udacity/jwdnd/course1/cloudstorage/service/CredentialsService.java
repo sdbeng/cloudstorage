@@ -21,6 +21,10 @@ public class CredentialsService {
         this.encryptionService = encryptionService;
     }
 
+    public List<Credential> getCredentialsForUser(Integer userId) {
+        return credentialsMapper.getCredentialsForUser(userId);
+    }
+
     //getCredentials
     public List<Credential> getCredentials(Integer userId) {
         List<Credential> credentialsList = credentialsMapper.getCredentials(userId);
@@ -36,6 +40,7 @@ public class CredentialsService {
         random.nextBytes(key);
         String encodedKey = Base64.getEncoder().encodeToString(key);
         String encryptedPassword = encryptionService.encryptValue(credentialForm.getPassword(), encodedKey);
+        credentialForm.setUserId(user.getUserId());
         return credentialsMapper.insertCredentials(new Credential(null, credentialForm.getUrl(), credentialForm.getUsername(), encodedKey, encryptedPassword, user.getUserId()));
     }
     //editCredentials

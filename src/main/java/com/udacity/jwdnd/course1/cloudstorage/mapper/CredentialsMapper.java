@@ -10,6 +10,9 @@ public interface CredentialsMapper {
     @Select("SELECT * FROM CREDENTIALS WHERE userid = #{userid}")
     List<Credential> getCredentials(Integer userId);
 
+    @Select("SELECT * FROM CREDENTIALS WHERE userid = #{userId}")
+    List<Credential> getCredentialsForUser(Integer userId);
+
     @Select("SELECT * FROM CREDENTIALS WHERE credentialid = #{credentialId}")//it's credentialid=#{} as in the schema
     Credential getCredentialById(Integer credentialId);
 

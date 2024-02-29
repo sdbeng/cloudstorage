@@ -61,4 +61,8 @@ public class FileService {
     public List<File> getFiles(Integer userId) {
         return fileMapper.getAllFiles(userId);
     }
+
+    public List<File> getFilesForUSer(Integer userId) {
+        return fileMapper.getFilesForUSer(userId);
+    }
 }
