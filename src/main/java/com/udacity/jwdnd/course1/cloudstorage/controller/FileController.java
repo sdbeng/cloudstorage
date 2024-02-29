@@ -63,14 +63,12 @@ public class FileController {
         String deleteError = null;
         if (fileId > 0) {
             fileService.deleteFile(fileId);
-            System.out.println("HANDLER*****deleteFile ->fileId: " + fileId);
             return "redirect:/home#nav-credential";
         }else{
             redirectAttributes.addAttribute("error", "Unable to delete. File not found");
             return "redirect:/home#nav-credential/error";
         }
     }
-
     @GetMapping("/download/{fileId}")
     public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable Integer fileId) {
         System.out.println("View-> fileId: " + fileId);

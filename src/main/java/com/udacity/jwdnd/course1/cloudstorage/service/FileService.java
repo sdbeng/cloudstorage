@@ -11,7 +11,6 @@ import java.util.List;
 @Service
 public class FileService {
     private FileMapper fileMapper;
-//    private UserMapper userMapper;
 
     public FileService(FileMapper fileMapper) {
         this.fileMapper = fileMapper;
@@ -19,7 +18,7 @@ public class FileService {
 
     public void addFile(MultipartFile fileUpload, int userid) throws IOException {
         File file = new File();
-        System.out.println("file instance: " + file);
+//        System.out.println("file instance: " + file);
         try {
             file.setContenttype(fileUpload.getContentType());
             file.setFiledata(fileUpload.getBytes());
@@ -28,7 +27,6 @@ public class FileService {
             file.setUserid(userid);
         } catch (IOException e) {
             System.out.println("Error in addFile"  + e.getMessage() + e.getCause());
-//            e.printStackTrace();
             throw e;
         }
         fileMapper.storeFile(file);
@@ -60,5 +58,9 @@ public class FileService {
 
     public List<File> getFiles(Integer userId) {
         return fileMapper.getAllFiles(userId);
+    }
+
+    public List<File> getFilesForUSer(Integer userId) {
+        return fileMapper.getFilesForUSer(userId);
     }
 }
