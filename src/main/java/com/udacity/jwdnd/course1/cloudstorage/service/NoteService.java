@@ -31,7 +31,6 @@ public class NoteService {
     }
 
     public Integer addNoteService(Note note, Integer userId) {
-        System.out.println("Add note service, userId passed: " + userId);
         Note newNote = new Note();
         newNote.setUserId(userId);
         newNote.setNoteTitle(note.getNoteTitle());
@@ -45,7 +44,6 @@ public class NoteService {
     }
 
     public int deleteNote(Integer noteId) {
-        System.out.println("Deleting note..." + noteId);
         return noteMapper.delete(noteId);
     }
 

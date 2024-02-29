@@ -20,14 +20,11 @@ public interface NoteMapper {
     @Select("SELECT * FROM NOTES WHERE userid = #{userId}")
     List<Note> getNotesForUser(Integer userId);
 
-    //get note byt title
     @Select("SELECT * FROM NOTES WHERE notetitle = #{noteTitle}")
     Note getNoteByTitle(String noteTitle);
 
     @Delete("DELETE FROM NOTES WHERE noteId = #{noteId}")
-//    @Delete("DELETE FROM NOTES WHERE noteTitle = #{noteTitle}")
     int delete(Integer noteId);
-//    int delete(String noteTitle);
 
     @Update("UPDATE NOTES SET notetitle = #{noteTitle}, notedescription = #{noteDescription} WHERE noteid = #{noteId}")
     int update(Note note);

@@ -48,7 +48,6 @@ public class CredentialsController {
             model.addAttribute("success", true);
             model.addAttribute("successMessage", "Credentials added successfully!");
             return "redirect:/home#nav-credential";
-//            return "redirect:/result?success";
 
         }else{
             model.addAttribute("success", false);
@@ -69,7 +68,6 @@ public class CredentialsController {
     }
 
         return "home";
-//        return "redirect:/result?success";
     }
 
     @GetMapping("/delete/{id}")
@@ -81,9 +79,6 @@ public class CredentialsController {
             credentialsService.deleteCredentials(credentialId);
             model.addAttribute("success", true);
             model.addAttribute("successMessage", "Credentials deleted successfully!");
-            //display the success message by hitting the /result endpoint
-//            return "redirect:/result?success";
-
         } else {
             model.addAttribute("success", false);
             model.addAttribute("errorMessage", "Error deleting credentials!");
@@ -92,5 +87,4 @@ public class CredentialsController {
         }
         return "redirect:/home#nav-credential";
     }
-
 }

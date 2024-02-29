@@ -46,7 +46,6 @@ public class HomeController {
     @GetMapping("/result")
     public String result() {
         System.out.println("result mapped path...");
-//        return "redirect:/home#nav-credential";
         return "result";
     }
 

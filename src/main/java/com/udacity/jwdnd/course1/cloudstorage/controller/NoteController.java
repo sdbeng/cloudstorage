@@ -36,7 +36,6 @@ public class NoteController {
         this.noteUpdateService = noteUpdateService;
         this.userService = userService;
         this.noteMapper = noteMapper;
-//        System.out.println("NoteController initialized with NoteService: " + noteService);
         this.userMapper = userMapper;
     }
 
@@ -52,7 +51,6 @@ public class NoteController {
     @PostMapping("/create")
     public String addNote(Authentication authentication, @ModelAttribute Note note, Model model){
         User user = userService.getUser(authentication.getName());
-        System.out.printf("userId: %s%n", user.getUserId());
 
         if(note.getNoteId() == null){
                 noteService.addNoteService(note, user.getUserId());
@@ -63,7 +61,6 @@ public class NoteController {
             model.addAttribute("update", true);
             model.addAttribute("updateMsg", "Note has been updated!");
         }
-//        model.addAttribute("notes", noteService.getAllNotes());
         model.addAttribute("notes", noteService.getNotesForUser(user.getUserId()));
         return "redirect:/home/note-success";
     }

@@ -26,14 +26,12 @@ public class UserService {
         byte[] salt = new byte[16];
         random.nextBytes(salt);
         String encodedSalt = Base64.getEncoder().encodeToString(salt);
-
         String hashedPassword = hashService.getHashedValue(user.getPassword(), encodedSalt);
 
         return userMapper.insert(new User(null, user.getUsername(), encodedSalt, hashedPassword, user.getFirstName(), user.getLastName()));
     }
 
     public User getUser(String username) {
-        System.out.println("UserSevice called, username param: " + username);
         return userMapper.getUser(username);
     }
 }
