@@ -63,7 +63,8 @@ public class NoteController {
             model.addAttribute("update", true);
             model.addAttribute("updateMsg", "Note has been updated!");
         }
-        model.addAttribute("notes", noteService.getAllNotes());
+//        model.addAttribute("notes", noteService.getAllNotes());
+        model.addAttribute("notes", noteService.getNotesForUser(user.getUserId()));
         return "redirect:/home/note-success";
     }
 

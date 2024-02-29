@@ -32,7 +32,7 @@ public class HomeController {
     public String homePage(Authentication authentication, Model model, File file, Note note, CredentialForm credentialForm){
         User user = userService.getUser(authentication.getName());
 
-        List<Note> noteList = noteService.getAllNotes();
+        List<Note> noteList = noteService.getNotesForUser(user.getUserId());//listing not global notes
         model.addAttribute("notes", noteList);
         List<File> fileList = fileService.getFiles(user.getUserId());
         model.addAttribute("files", fileList);

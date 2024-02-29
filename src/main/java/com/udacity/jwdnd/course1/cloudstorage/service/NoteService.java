@@ -22,9 +22,9 @@ public class NoteService {
         return noteMapper.getAllNotes();
     }
 
-    public List<Note> getUserNotes(Integer userId) {
-        return noteMapper.getUserNotes(userId);
-    }
+//    public List<Note> getUserNotes(Integer userId) {
+//        return noteMapper.getUserNotes(userId);
+//    }
 
     public Note getNote(Integer noteId) {
         return noteMapper.getNoteById(noteId);
@@ -41,6 +41,11 @@ public class NoteService {
         newNote.setNoteTitle(note.getNoteTitle());
         newNote.setNoteDescription(note.getNoteDescription());
         return noteMapper.insertNote(newNote);
+    }
+
+    public List<Note> getNotesForUser(Integer userId) {
+        System.out.println("getNotesForUser called, userId passed: " + userId);
+        return noteMapper.getNotesForUser(userId);
     }
 
     public int deleteNote(Integer noteId) {
