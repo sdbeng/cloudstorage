@@ -88,14 +88,10 @@ class CloudStorageApplicationTests {
 		// You may have to modify the element "success-msg" and the sign-up 
 		// success message below depening on the rest of your code.
 		*/
-		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("success-msg")));
 		Assertions.assertTrue(driver.findElement(By.id("success-msg")).getText().contains("You successfully signed up!"));
-		//redirect to login page after signup successfull
-		driver.get("http://localhost:" + this.port + "/login");
-//		testRedirection();
+		//wait for redirecting to login page
+		webDriverWait.until(ExpectedConditions.titleContains("Login"));
 	}
-
-	
 	
 	/**
 	 * PLEASE DO NOT DELETE THIS method.
@@ -143,6 +139,39 @@ class CloudStorageApplicationTests {
 		
 		// Check if we have been redirected to the log in page.
 		Assertions.assertEquals("http://localhost:" + this.port + "/login", driver.getCurrentUrl());
+	}
+
+	/**
+	 * test upload files, see files previously uploaded.
+	 * */
+	@Test
+	public void uploadFile() throws InterruptedException {
+		// Create a test account
+		doMockSignUp("Nana", "Test", "NT", "123");
+		doLogIn("NT", "123");
+
+		// Go to files tab
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-files-tab")));
+		WebElement filesTab = driver.findElement(By.id("nav-files-tab"));
+		filesTab.click();
+
+		// Upload a file
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("fileUpload")));
+		WebElement fileSelectButton = driver.findElement(By.id("fileUpload"));
+		fileSelectButton.sendKeys(new File("src/test/resources/test.txt").getAbsolutePath());
+
+		WebElement uploadButton = driver.findElement(By.id("uploadButton"));
+		uploadButton.click();
+
+		// Check if we have been redirected to the home page, files tab.
+		redirectToHome(webDriverWait, "nav-files-tab");
+
+		// Check if the file is displayed on the home page.
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("fileTable")));
+		Assertions.assertTrue(driver.findElement(By.id("table-file-name")).getText().contains("test.txt"));
+
+		Thread.sleep(3000);
 	}
 
 	@Test
@@ -251,7 +280,6 @@ class CloudStorageApplicationTests {
 		WebElement usernameDisplay = driver.findElement(By.id("table-cred-username"));
 		Assertions.assertEquals("testuser", usernameDisplay.getText());
 
-		// Verify password is unencrypted
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("table-cred-password")));
 		WebElement passwordDisplay = driver.findElement(By.id("table-cred-password"));
 		Assertions.assertNotEquals("password123", passwordDisplay.getText());
@@ -262,32 +290,35 @@ class CloudStorageApplicationTests {
 
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-url")));
 		WebElement urlField2 = driver.findElement(By.id("credential-url"));
+		//clear the field before sending the new keys
+		urlField2.clear();
 		urlField2.sendKeys("https://example.com/new");
 
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-username")));
 		WebElement usernameField2 = driver.findElement(By.id("credential-username"));
+		usernameField2.clear();
 		usernameField2.sendKeys("testuser2");
 
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-password")));
 		WebElement passwordField2 = driver.findElement(By.id("credential-password"));
+		passwordField2.clear();
 		passwordField2.sendKeys("<PASSWORD>");
 
 		WebElement submitButton2 = driver.findElement(By.id("submit-credential-button"));
 		submitButton2.click();
-		Thread.sleep(2000);
+//		Thread.sleep(4000);
 		// Verify credentials displayed
 		//Locate credentials tab and click it
 		redirectToHome(wait, "nav-credential-tab");
 
-		driver.navigate().refresh();
+//		driver.navigate().refresh();
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialTable")));
 
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("table-cred-url")));
-		driver.navigate().refresh();
+//		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("table-cred-url")));
+//		driver.navigate().refresh();
 
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("table-cred-url")));
 		WebElement urlDisplay2 = driver.findElement(By.id("table-cred-url"));
-		String updatedUrl = driver.findElement(By.id("credential-url")).getAttribute("value");
-		Assertions.assertEquals(updatedUrl, "https://example.com/new");
 		Assertions.assertEquals("https://example.com/new", urlDisplay2.getText());
 
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("table-cred-username")));
