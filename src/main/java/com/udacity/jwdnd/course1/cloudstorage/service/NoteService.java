@@ -1,12 +1,9 @@
 package com.udacity.jwdnd.course1.cloudstorage.service;
 
 import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
-import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import org.slf4j.Logger;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.NoteMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,17 +34,13 @@ public class NoteService {
         return noteMapper.getNoteByTitle(noteTitle) == null;
     }
 
-    public Integer addNoteService(Note note) {
-
+    public Integer addNoteService(Note note, Integer userId) {
+        System.out.println("Add note service, userId passed: " + userId);
         Note newNote = new Note();
+        newNote.setUserId(userId);
         newNote.setNoteTitle(note.getNoteTitle());
         newNote.setNoteDescription(note.getNoteDescription());
         return noteMapper.insertNote(newNote);
-    }
-
-    public User getCurrentUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return userMapper.getUser(auth.getName());
     }
 
     public int deleteNote(Integer noteId) {
