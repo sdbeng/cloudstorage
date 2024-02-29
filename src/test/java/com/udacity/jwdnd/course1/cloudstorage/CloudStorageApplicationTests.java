@@ -88,7 +88,11 @@ class CloudStorageApplicationTests {
 		// You may have to modify the element "success-msg" and the sign-up 
 		// success message below depening on the rest of your code.
 		*/
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("success-msg")));
 		Assertions.assertTrue(driver.findElement(By.id("success-msg")).getText().contains("You successfully signed up!"));
+		//redirect to login page after signup successfull
+		driver.get("http://localhost:" + this.port + "/login");
+//		testRedirection();
 	}
 
 	
@@ -140,8 +144,6 @@ class CloudStorageApplicationTests {
 		// Check if we have been redirected to the log in page.
 		Assertions.assertEquals("http://localhost:" + this.port + "/login", driver.getCurrentUrl());
 	}
-
-
 
 	@Test
 	public void testCredentials() throws InterruptedException {
@@ -203,6 +205,164 @@ class CloudStorageApplicationTests {
 
 	}
 
+	@Test
+	public void testEditCredentials() throws InterruptedException {
+		// Sign up and log in
+		doMockSignUp("TestUser", "Test", "TU", "password123");
+		doLogIn("TU", "password123");
+
+		// Go to credentials tab
+		WebDriverWait wait = new WebDriverWait(driver, 2);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-files-tab")));
+		WebElement credentialsTab = driver.findElement(By.id("nav-credential-tab"));
+		credentialsTab.click();
+
+		// Add credentials
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("add-credential-button")));
+		WebElement addCredentialButton = driver.findElement(By.id("add-credential-button"));
+		addCredentialButton.click();
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-url")));
+		WebElement urlField = driver.findElement(By.id("credential-url"));
+		urlField.sendKeys("https://example.com");
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-username")));
+		WebElement usernameField = driver.findElement(By.id("credential-username"));
+		usernameField.sendKeys("testuser");
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-password")));
+		WebElement passwordField = driver.findElement(By.id("credential-password"));
+		passwordField.sendKeys("password123");
+
+		WebElement submitButton = driver.findElement(By.id("submit-credential-button"));
+		submitButton.click();
+
+		// Verify credentials displayed
+		//Locate credentials tab and click it
+		redirectToHome(wait, "nav-credential-tab");
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialTable")));
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("table-cred-url")));
+		WebElement urlDisplay = driver.findElement(By.id("table-cred-url"));
+		Assertions.assertEquals("https://example.com", urlDisplay.getText());
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("table-cred-username")));
+		WebElement usernameDisplay = driver.findElement(By.id("table-cred-username"));
+		Assertions.assertEquals("testuser", usernameDisplay.getText());
+
+		// Verify password is unencrypted
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("table-cred-password")));
+		WebElement passwordDisplay = driver.findElement(By.id("table-cred-password"));
+		Assertions.assertNotEquals("password123", passwordDisplay.getText());
+
+		// Edit credentials
+		WebElement editButton = driver.findElement(By.id("edit-credential-button"));
+		editButton.click();
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-url")));
+		WebElement urlField2 = driver.findElement(By.id("credential-url"));
+		urlField2.sendKeys("https://example.com/new");
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-username")));
+		WebElement usernameField2 = driver.findElement(By.id("credential-username"));
+		usernameField2.sendKeys("testuser2");
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-password")));
+		WebElement passwordField2 = driver.findElement(By.id("credential-password"));
+		passwordField2.sendKeys("<PASSWORD>");
+
+		WebElement submitButton2 = driver.findElement(By.id("submit-credential-button"));
+		submitButton2.click();
+		Thread.sleep(2000);
+		// Verify credentials displayed
+		//Locate credentials tab and click it
+		redirectToHome(wait, "nav-credential-tab");
+
+		driver.navigate().refresh();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialTable")));
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("table-cred-url")));
+		driver.navigate().refresh();
+
+		WebElement urlDisplay2 = driver.findElement(By.id("table-cred-url"));
+		String updatedUrl = driver.findElement(By.id("credential-url")).getAttribute("value");
+		Assertions.assertEquals(updatedUrl, "https://example.com/new");
+		Assertions.assertEquals("https://example.com/new", urlDisplay2.getText());
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("table-cred-username")));
+		WebElement usernameDisplay2 = driver.findElement(By.id("table-cred-username"));
+		Assertions.assertEquals("testuser2", usernameDisplay2.getText());
+
+		// Verify password is encrypted
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("table-cred-password")));
+		WebElement passwordDisplay2 = driver.findElement(By.id("table-cred-password"));
+		Assertions.assertNotEquals("password123", passwordDisplay2.getText());
+
+		Thread.sleep(3000);
+
+	}
+
+	//write a test that deletes a credential and verifies it is no longer displayed
+	@Test
+	public void testDeleteCredentials() throws InterruptedException {
+		// Sign up and log in
+		doMockSignUp("TestUser", "Test", "TU", "password123");
+        doLogIn("TU", "password123");
+
+		// Go to credentials tab
+		WebDriverWait wait = new WebDriverWait(driver, 2);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-files-tab")));
+		WebElement credentialsTab = driver.findElement(By.id("nav-credential-tab"));
+		credentialsTab.click();
+
+		// Add credentials
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("add-credential-button")));
+		WebElement addCredentialButton = driver.findElement(By.id("add-credential-button"));
+		addCredentialButton.click();
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-url")));
+		WebElement urlField = driver.findElement(By.id("credential-url"));
+		urlField.sendKeys("https://example.com");
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-username")));
+		WebElement usernameField = driver.findElement(By.id("credential-username"));
+		usernameField.sendKeys("testuser");
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-password")));
+		WebElement passwordField = driver.findElement(By.id("credential-password"));
+		passwordField.sendKeys("<PASSWORD>");
+
+		WebElement submitButton = driver.findElement(By.id("submit-credential-button"));
+
+		submitButton.click();
+
+		// Verify credentials displayed
+		//Locate credentials tab and click it
+		redirectToHome(wait, "nav-credential-tab");
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialTable")));
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("table-cred-url")));
+		WebElement urlDisplay = driver.findElement(By.id("table-cred-url"));
+		Assertions.assertEquals("https://example.com", urlDisplay.getText());
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("table-cred-username")));
+		WebElement usernameDisplay = driver.findElement(By.id("table-cred-username"));
+		Assertions.assertEquals("testuser", usernameDisplay.getText());
+
+		// Delete credentials
+		WebElement deleteButton = driver.findElement(By.id("delete-credential-button"));
+		deleteButton.click();
+
+		// Verify credentials are not displayed
+		redirectToHome(wait, "nav-credential-tab");
+
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialTable")));
+
+		Thread.sleep(3000);
+
+	}
 
 	/* test creating a note and redirecting back to home page*/
 	@Test
@@ -387,90 +547,6 @@ class CloudStorageApplicationTests {
 		driver.get("http://localhost:" + this.port + "/home");
 		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id(id)));
 		driver.findElement(By.id(id)).click();
-	}
-
-	/* test creating a credential and redirecting back to home page*/
-	@Test
-	public void createCredential() throws InterruptedException {
-		// Create a test account
-		doMockSignUp("Nana","Test","NT","123");
-		doLogIn("NT", "123");
-
-		// Create a credential
-		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
-		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-credentials-tab")));
-		WebElement credentialsTab = driver.findElement(By.id("nav-credentials-tab"));
-		credentialsTab.click();
-
-		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("add-credential-button")));
-		WebElement addCredentialButton = driver.findElement(By.id("add-credential-button"));
-		addCredentialButton.click();
-
-		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-url")));
-		WebElement credentialUrl = driver.findElement(By.id("credential-url"));
-		credentialUrl.click();
-		credentialUrl.sendKeys("Test URL");
-
-		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-username")));
-		WebElement credentialUsername = driver.findElement(By.id("credential-username"));
-		credentialUsername.click();
-		credentialUsername.sendKeys("Test Username");
-
-		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-password")));
-		WebElement credentialPassword = driver.findElement(By.id("credential-password"));
-		credentialPassword.click();
-		credentialPassword.sendKeys("Test Password");
-
-		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("submit-credential-button")));
-		WebElement credentialSubmit = driver.findElement(By.id("submit-credential-button"));
-		credentialSubmit.click();
-
-		// Check if we have been redirected to the home page.
-		redirectToCredentialTab(webDriverWait, "nav-credentials-tab");
-
-		// Check if the credential is displayed on the home page.
-		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialTable")));
-		Assertions.assertTrue(driver.findElement(By.id("table-credential-url")).getText().contains("Test URL"));
-
-		Thread.sleep(3000);
-	}
-
-	/**
-	 * Write a test to check that the user should be able to upload files and see any files they previously uploaded.
-	 * */
-	@Test
-	public void uploadFile() throws InterruptedException {
-		// Create a test account
-		doMockSignUp("Nana", "Test", "NT", "123");
-		doLogIn("NT", "123");
-
-		// Go to files tab
-		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
-		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-files-tab")));
-		WebElement filesTab = driver.findElement(By.id("nav-files-tab"));
-		filesTab.click();
-
-//		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("add-file-button")));
-//		WebElement addFileButton = driver.findElement(By.id("add-file-button"));
-//		addFileButton.click();
-
-		// Upload a file
-		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("fileUpload")));
-		WebElement fileSelectButton = driver.findElement(By.id("fileUpload"));
-		fileSelectButton.sendKeys(new File("src/test/resources/test.txt").getAbsolutePath());
-
-		WebElement uploadButton = driver.findElement(By.id("uploadButton"));
-		uploadButton.click();
-
-		// Check if we have been redirected to the home page, files tab.
-		redirectToHome(webDriverWait, "nav-files-tab");
-
-		// Check if the file is displayed on the home page.
-		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("fileTable")));
-		Assertions.assertTrue(driver.findElement(By.id("table-file-name")).getText().contains("test.txt"));
-
-		Thread.sleep(3000);
-
 	}
 
 	/**

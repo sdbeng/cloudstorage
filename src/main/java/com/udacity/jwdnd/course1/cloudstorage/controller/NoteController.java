@@ -52,6 +52,11 @@ public class NoteController {
     @PostMapping("/create")
     public String addNote(Authentication authentication, @ModelAttribute Note note, Model model){
         User user = userService.getUser(authentication.getName());
+        //set userId to user object
+        note.setUserId(noteService.getCurrentUser().getUserId());
+//        user.setUserId(user.getUserId());
+        //set userId on the note object
+//        note.setUserId(user.getUserId());
         note.setUserId(userService.getUser(authentication.getName()).getUserId());
 //        String errorMessage = null;
 //        System.out.printf("userId: %s%n", user.getUserId());

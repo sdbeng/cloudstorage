@@ -16,7 +16,7 @@
             </div>
 
             <div th:unless="${success}" class="alert alert-danger fill-parent">
-                <h1 class="display-5 alert alert-danger" id="error">Error. Something went wrong.</h1>
+                <h1 class="display-5 alert alert-danger" id="error">Error. Something went wrong or file already in storage.</h1>
                 <span th:text="${errorMsg}">Error Message</span>
                 <a href="javascript:history.back();" class="btn btn-outline-secondary w-16">Back</a>
             </div>
