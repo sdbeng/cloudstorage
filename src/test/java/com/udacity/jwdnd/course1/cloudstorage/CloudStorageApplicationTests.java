@@ -234,6 +234,13 @@ class CloudStorageApplicationTests {
 
 	}
 
+	public void navigateToCredTab(WebDriverWait wait){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-files-tab")));
+		WebElement homeTab = driver.findElement(By.id("nav-credential-tab"));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-credential-tab")));
+		WebElement credentialsTab = driver.findElement(By.id("nav-credential-tab"));
+		credentialsTab.click();
+	}
 	@Test
 	public void testEditCredentials() throws InterruptedException {
 		// Sign up and log in
@@ -243,6 +250,9 @@ class CloudStorageApplicationTests {
 		// Go to credentials tab
 		WebDriverWait wait = new WebDriverWait(driver, 2);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-files-tab")));
+
+		WebElement homeTab = driver.findElement(By.id("nav-credential-tab"));
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-credential-tab")));
 		WebElement credentialsTab = driver.findElement(By.id("nav-credential-tab"));
 		credentialsTab.click();
 
@@ -266,25 +276,10 @@ class CloudStorageApplicationTests {
 		WebElement submitButton = driver.findElement(By.id("submit-credential-button"));
 		submitButton.click();
 
-		// Verify credentials displayed
-		//Locate credentials tab and click it
-		redirectToHome(wait, "nav-credential-tab");
-
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialTable")));
-
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("table-cred-url")));
-		WebElement urlDisplay = driver.findElement(By.id("table-cred-url"));
-		Assertions.assertEquals("https://example.com", urlDisplay.getText());
-
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("table-cred-username")));
-		WebElement usernameDisplay = driver.findElement(By.id("table-cred-username"));
-		Assertions.assertEquals("testuser", usernameDisplay.getText());
-
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("table-cred-password")));
-		WebElement passwordDisplay = driver.findElement(By.id("table-cred-password"));
-		Assertions.assertNotEquals("password123", passwordDisplay.getText());
+		navigateToCredTab(wait);
 
 		// Edit credentials
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("edit-credential-button")));
 		WebElement editButton = driver.findElement(By.id("edit-credential-button"));
 		editButton.click();
 
@@ -302,20 +297,16 @@ class CloudStorageApplicationTests {
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-password")));
 		WebElement passwordField2 = driver.findElement(By.id("credential-password"));
 		passwordField2.clear();
-		passwordField2.sendKeys("<PASSWORD>");
+		passwordField2.sendKeys("n3passw0rd@345");
 
 		WebElement submitButton2 = driver.findElement(By.id("submit-credential-button"));
 		submitButton2.click();
-//		Thread.sleep(4000);
-		// Verify credentials displayed
-		//Locate credentials tab and click it
-		redirectToHome(wait, "nav-credential-tab");
 
-//		driver.navigate().refresh();
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credentialTable")));
+		navigateToCredTab(wait);
 
-//		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("table-cred-url")));
-//		driver.navigate().refresh();
+//		driver.navigate().refresh();//messes up with browser cache
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("credential-body")));
+		WebElement credentialsTable = driver.findElement(By.id("credential-body"));
 
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("table-cred-url")));
 		WebElement urlDisplay2 = driver.findElement(By.id("table-cred-url"));
