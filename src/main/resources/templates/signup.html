@@ -45,5 +45,8 @@
                 <button type="submit" style="background-color: #ed6f2e;border-radius: 5px;color: white;border-style: none;" id="buttonSignUp">Sign Up</button>
             </form>
         </div>
+        <script th:if="${signupSuccess}" type = "text/javascript">
+            setTimeout(() => { window.location.href="/login"; }, 1000);
+        </script>
     </body>
 </html>

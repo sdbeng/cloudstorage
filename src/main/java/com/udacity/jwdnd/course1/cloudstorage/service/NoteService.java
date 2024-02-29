@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.service;
 
+import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
 import org.slf4j.Logger;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.NoteMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
@@ -10,9 +11,10 @@ import java.util.List;
 @Service
 public class NoteService {
     private NoteMapper noteMapper;
+    private UserMapper userMapper;
     private Logger logger = org.slf4j.LoggerFactory.getLogger(NoteService.class);
 
-    public NoteService(NoteMapper noteMapper) {
+    public NoteService(NoteMapper noteMapper){
         this.noteMapper = noteMapper;
     }
 
@@ -32,9 +34,10 @@ public class NoteService {
         return noteMapper.getNoteByTitle(noteTitle) == null;
     }
 
-    public Integer addNoteService(Note note) {
-
+    public Integer addNoteService(Note note, Integer userId) {
+        System.out.println("Add note service, userId passed: " + userId);
         Note newNote = new Note();
+        newNote.setUserId(userId);
         newNote.setNoteTitle(note.getNoteTitle());
         newNote.setNoteDescription(note.getNoteDescription());
         return noteMapper.insertNote(newNote);
